@@ -46,7 +46,7 @@ function App() {
           <p>Join the Vite community</p>
           <ul>
             <li>
-              <a href="https://github.com/wendev27" target="_blank">
+              <a href="https://github.com/imrichdvn" target="_blank">
                 <svg
                   className="button-icon"
                   role="presentation"
