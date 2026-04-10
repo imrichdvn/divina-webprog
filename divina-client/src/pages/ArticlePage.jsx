@@ -9,14 +9,14 @@ const ArticlePage = () => {
       <section className="border-y-2 border-neutral-900 bg-white px-4 py-6 sm:px-6 sm:py-8">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-            Articles
+            Dog Articles
           </p>
           <h1 className="mt-2 text-3xl font-bold leading-tight text-neutral-900 sm:text-4xl">
-            Featured articles in a simple card grid
+            Tips, Guides & Stories for Dog Lovers
           </h1>
           <p className="mt-4 text-sm leading-7 text-neutral-600 sm:text-base">
-            Use these cards to practice layout basics: consistent spacing, short
-            descriptions, and clear actions per card.
+            Learn how to care for your dog, discover training tips, and read
+            heartwarming stories from fellow dog owners.
           </p>
 
           <div className="mt-6">
@@ -29,27 +29,27 @@ const ArticlePage = () => {
 
       <section className="border-y-2 border-neutral-900 bg-white px-4 py-6 sm:px-6 sm:py-8">
         <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-          Featured Articles
+          Featured Guides
         </p>
         <h2 className="mt-2 text-2xl font-semibold text-neutral-900">
-          Article cards
+          Latest Dog Articles
         </h2>
 
         <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3 mx-auto max-w-5xl">
           {[
             {
-              title: "Article One",
-              body: "A simple placeholder for a featured article with image, title, and copy.",
+              title: "How to Train Your Dog",
+              body: "Simple and effective techniques to teach your dog basic commands and good behavior.",
               image: card1,
             },
             {
-              title: "Article Two",
-              body: "Build clean sections and text-leading to keep layout readable.",
+              title: "Dog Nutrition Basics",
+              body: "Learn what to feed your dog to keep them healthy, active, and full of energy.",
               image: card2,
             },
             {
-              title: "Article Three",
-              body: "Using a shared pattern makes each card section easy to scan.",
+              title: "Caring for Puppies",
+              body: "A beginner’s guide to raising a happy, healthy puppy from day one.",
               image: card3,
             },
           ].map((article) => (
@@ -65,7 +65,7 @@ const ArticlePage = () => {
                 />
               </div>
               <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-                Featured
+                Dog Care
               </p>
               <h3 className="mt-2 text-lg font-semibold text-neutral-900">
                 {article.title}

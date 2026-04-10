@@ -11,18 +11,18 @@ const HomePage = () => {
         <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
           <div className="space-y-4">
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-              Hero Section
+              Welcome
             </p>
             <h1 className="max-w-xl text-3xl font-bold leading-tight text-neutral-900 sm:text-4xl">
-              Welcome to Wireframe Studio Layout
+              Find Your Perfect Dog Companion
             </h1>
             <p className="max-w-lg text-sm leading-7 text-neutral-600 sm:text-base">
-              Discover the art of wireframing with a simple layout system for
-              hero content, key numbers, and feature cards.
+              Explore loving dogs ready for adoption, learn pet care tips, and
+              discover everything you need to give your furry friend a happy life.
             </p>
             <div className="mt-6">
               <Button to="/about" variant="primary">
-                Learn More
+                Explore Dogs
               </Button>
             </div>
           </div>
@@ -30,7 +30,7 @@ const HomePage = () => {
           <div className="relative min-h-64 overflow-hidden rounded-3xl border-2 border-dashed border-orange-200 bg-orange-50">
             <img
               src={heroLogo}
-              alt="Orange logo"
+              alt="Happy dog"
               className="absolute inset-0 h-full w-full object-cover"
             />
           </div>
@@ -39,18 +39,18 @@ const HomePage = () => {
 
       <section className="border-y-2 border-neutral-900 bg-white px-4 py-6 sm:px-6 sm:py-8">
         <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-          Quick overview blocks
+          Quick overview
         </p>
         <h2 className="mt-2 text-2xl font-semibold text-neutral-900">
-          Projects
+          Our Community
         </h2>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: "Projects", value: "12" },
-            { label: "Sections", value: "08" },
-            { label: "Screens", value: "24" },
-            { label: "Layouts", value: "04" },
+            { label: "Dogs Available", value: "12" },
+            { label: "Adoptions", value: "08" },
+            { label: "Happy Owners", value: "24" },
+            { label: "Rescue Centers", value: "04" },
           ].map((item) => (
             <div
               key={item.label}
@@ -69,27 +69,27 @@ const HomePage = () => {
 
       <section className="border-y-2 border-neutral-900 bg-white px-4 py-6 sm:px-6 sm:py-8">
         <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-          Feature Cards
+          Featured Dogs
         </p>
         <h2 className="mt-2 text-2xl font-semibold text-neutral-900">
-          Simple wireframe cards
+          Meet Your New Best Friend
         </h2>
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {[
             {
-              title: "Feature Card One",
-              body: "A clean placeholder for title, short copy, and action.",
+              title: "Buddy",
+              body: "A playful and friendly dog who loves walks and cuddles.",
               image: card1,
             },
             {
-              title: "Feature Card Two",
-              body: "Balanced spacing keeps the card layout easy to scan.",
+              title: "Max",
+              body: "Loyal and protective, perfect for families and homes.",
               image: card2,
             },
             {
-              title: "Feature Card Three",
-              body: "Repeated blocks give the page a consistent wireframe rhythm.",
+              title: "Bella",
+              body: "Gentle and sweet, she enjoys quiet time and affection.",
               image: card3,
             },
           ].map((card) => (
@@ -115,7 +115,7 @@ const HomePage = () => {
                 {card.body}
               </p>
               <Button className="mt-4" variant="primary">
-                View More
+                View Profile
               </Button>
             </article>
           ))}
