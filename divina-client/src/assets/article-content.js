@@ -4,6 +4,9 @@ import img3 from './cards/3.jpg';
 import img4 from './cards/4.jpg'; // Fix: sidebar shows 4.png is in 'cards'
 import img5 from './cards/5.jpg';
 
+
+//  baguhin mo yung articles for dogs oki
+
 const articles = [
   {
     name: 'lab-act-3-overview',
