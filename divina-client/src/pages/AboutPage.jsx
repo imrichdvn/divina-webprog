@@ -7,175 +7,75 @@ import card4 from "../assets/articles/44.jpg";
 
 const AboutPage = () => {
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <section className="border-y-2 border-neutral-900 bg-white px-4 py-6 sm:px-6 sm:py-8">
-        <div className="grid gap-6 lg:grid-cols-2 lg:items-center">
-          <div className="relative min-h-72 overflow-hidden rounded-3xl border-2 border-dashed border-orange-200 bg-orange-50">
-            <img
-              src={about}
-              alt="Dogs playing"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </div>
-
-          <div>
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-              About Us
+    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-12">
+      {/* Hero Section */}
+      <section className="rounded-[2rem] border-2 border-neutral-900 bg-white p-8">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+          <div className="order-2 lg:order-1">
+            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.28em] text-orange-600">
+              Our Heart & Soul
             </p>
-            <h1 className="max-w-xl text-3xl font-bold leading-tight text-neutral-900 sm:text-4xl">
-              Dedicated to Helping Dogs Find Loving Homes
+            <h1 className="text-4xl font-black leading-tight text-neutral-900 sm:text-5xl">
+              Dedicated to Every Paw in Need
             </h1>
-            <p className="mt-4 max-w-lg text-sm leading-7 text-neutral-600 sm:text-base">
-              We are passionate about connecting dogs with caring families.
-              Our mission is to promote adoption, responsible pet ownership,
-              and provide helpful resources for every dog lover.
+            <p className="mt-6 text-base leading-relaxed text-neutral-600">
+              Paws & Claws started with a simple belief: every dog deserves a warm bed and a loving family. 
+              We operate as a bridge between high-kill shelters and permanent homes, providing 
+              medical care, training, and socialization along the way.
             </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button to="/" variant="primary">
-                Back Home
-              </Button>
-              <Button to="/articles">Read Dog Articles</Button>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Button to="/" variant="primary">Return Home</Button>
+              <Button to="/articles">Pet Care Resources</Button>
             </div>
+          </div>
+          <div className="order-1 aspect-video lg:order-2 overflow-hidden rounded-2xl border-2 border-neutral-900">
+            <img src={about} alt="Dogs playing together" className="h-full w-full object-cover" />
           </div>
         </div>
       </section>
 
-      <section className="border-y-2 border-neutral-900 bg-white px-4 py-6 sm:px-6 sm:py-8">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-          Our Impact
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-neutral-900">
-          Community Overview
-        </h2>
-
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { label: "Dogs Rescued", value: "120+" },
-            { label: "Adoptions", value: "95" },
-            { label: "Volunteers", value: "30" },
-            { label: "Partner Shelters", value: "8" },
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="rounded-3xl border-2 border-neutral-900 bg-orange-50 p-5"
-            >
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-                {item.label}
-              </p>
-              <p className="mt-2 text-2xl font-bold text-neutral-900">
-                {item.value}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="border-y-2 border-zinc-900 bg-zinc-50 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          
-          {/* Left side */}
-          <div>
-            <p className="text-[.11px] font-semibold uppercase tracking-[0.28em] text-zinc-500">
-              Our Mission
-            </p>
-
-            <h2 className="mt-2 text-2xl font-semibold text-zinc-900">
-              What We Do for Dogs
-            </h2>
-
-            <div className="mt-6 space-y-4">
-              
-              <article className="rounded-3xl border-2 border-zinc-900 bg-zinc-100 p-5">
-                <h3 className="text-lg font-semibold text-zinc-900">
-                  Rescue & Adoption
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-zinc-600">
-                  We help rescue abandoned dogs and connect them with loving
-                  families ready to adopt.
-                </p>
-              </article>
-
-              <article className="rounded-3xl border-2 border-zinc-900 bg-zinc-100 p-5">
-                <h3 className="text-lg font-semibold text-zinc-900">
-                  Education & Training
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-zinc-600">
-                  Providing guidance on training, behavior, and responsible
-                  pet ownership for all dog owners.
-                </p>
-              </article>
-
-              <article className="rounded-3xl border-2 border-zinc-900 bg-zinc-100 p-5">
-                <h3 className="text-lg font-semibold text-zinc-900">
-                  Health & Care
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-zinc-600">
-                  Sharing essential tips on dog health, nutrition, and overall
-                  well-being.
-                </p>
-              </article>
-
-            </div>
-          </div>
-
-          {/* Right side */}
-          <div className="rounded-3xl border-2 border-zinc-900 bg-zinc-100 p-5">
-            
-            <p className="text-[.11px] font-semibold uppercase tracking-[0.28em] text-zinc-500">
-              Happy Dogs
-            </p>
-
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+      {/* Grid: Mission & Stories */}
+      <section className="grid gap-8 lg:grid-cols-3">
+        {/* Mission Column */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="rounded-3xl border-2 border-neutral-900 bg-orange-50 p-8">
+            <h2 className="text-2xl font-bold text-neutral-900">What We Stand For</h2>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2">
               {[
-                {
-                  title: "Buddy",
-                  body: "Now happily adopted and living with a loving family.",
-                  image: card1,
-                },
-                {
-                  title: "Max",
-                  body: "A playful dog who found his forever home.",
-                  image: card2,
-                },
-                {
-                  title: "Bella",
-                  body: "Enjoying a peaceful and happy life with her owners.",
-                  image: card3,
-                },
-                {
-                  title: "Charlie",
-                  body: "Rescued and now thriving in a caring environment.",
-                  image: card4,
-                },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  className="overflow-hidden rounded-[1.25rem] bg-zinc-200"
-                >
-                  <div className="relative aspect-square">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-
-                  <div className="p-3">
-                    <h4 className="text-sm font-semibold text-zinc-900">
-                      {item.title}
-                    </h4>
-                    <p className="mt-1 text-xs text-zinc-600">
-                      {item.body}
-                    </p>
-                  </div>
+                { title: "Rescue", body: "Saving abandoned dogs from high-risk environments." },
+                { title: "Rehabilitation", body: "Providing professional training and medical care." },
+                { title: "Education", body: "Teaching the community about responsible pet ownership." },
+                { title: "Adoption", body: "Matching unique personalities with the perfect homes." },
+              ].map((point) => (
+                <div key={point.title} className="space-y-2">
+                  <h4 className="font-bold text-neutral-900 border-b-2 border-neutral-900 inline-block">{point.title}</h4>
+                  <p className="text-sm text-neutral-600">{point.body}</p>
                 </div>
               ))}
             </div>
-
-            <button className="mt-5">View More Stories</button>
           </div>
+        </div>
 
+        {/* Success Stories Sidebar */}
+        <div className="rounded-3xl border-2 border-neutral-900 bg-neutral-900 p-6 text-white">
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-orange-400">Happy Endings</p>
+          <h2 className="mt-2 text-2xl font-bold">Success Stories</h2>
+          <div className="mt-6 grid gap-4">
+            {[
+              { name: "Buddy", img: card1 },
+              { name: "Bella", img: card3 },
+            ].map((story) => (
+              <div key={story.name} className="group relative aspect-square overflow-hidden rounded-xl border border-white/20">
+                <img src={story.img} alt={story.name} className="h-full w-full object-cover opacity-60 transition-all group-hover:opacity-100" />
+                <div className="absolute bottom-3 left-3">
+                  <p className="text-xs font-bold uppercase tracking-widest">{story.name} found a home!</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <button className="mt-6 w-full rounded-full border border-white/20 py-3 text-[11px] font-bold uppercase tracking-widest hover:bg-white hover:text-neutral-900 transition-colors">
+            View More Stories
+          </button>
         </div>
       </section>
     </div>

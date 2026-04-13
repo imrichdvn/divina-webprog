@@ -1,15 +1,18 @@
+// Layout.jsx
 import { Outlet } from "react-router-dom";
 import NavBar from "./shared/Navbar";
-import Footer from "./Footer"; // Import here
+import Footer from "./Footer";
 
 const Layout = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-100 text-zinc-900">
+    // Use stone-50 for a warmer, pet-friendly feel than cold zinc-100
+    <div className="flex min-h-screen flex-col bg-stone-50 text-neutral-900 selection:bg-orange-200">
       <NavBar />
-      <main className="flex-grow pb-16 pt-20">
+      {/* pt-24 ensures content isn't hidden behind the fixed header */}
+      <main className="flex-grow pt-24 pb-16">
         <Outlet />
       </main>
-      <Footer /> {/* Add here */}
+      <Footer />
     </div>
   );
 };

@@ -7,114 +7,109 @@ import card3 from "../assets/cards/3.jpg";
 const HomePage = () => {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <section className="border-y-2 border-neutral-900 bg-white px-4 py-6 sm:px-6 sm:py-8">
-        <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
-          <div className="space-y-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-              Welcome
+      {/* Hero Section */}
+      <section className="rounded-[2rem] border-2 border-neutral-900 bg-white p-6 sm:p-10 lg:p-12">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div className="space-y-6">
+            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-orange-600">
+              Welcome to Paws & Claws
             </p>
-            <h1 className="max-w-xl text-3xl font-bold leading-tight text-neutral-900 sm:text-4xl">
-              Find Your Perfect Dog Companion
+            <h1 className="text-4xl font-black leading-[1.1] text-neutral-900 sm:text-5xl lg:text-6xl">
+              Find Your New <span className="text-orange-500 underline decoration-neutral-900 underline-offset-4">Best Friend</span>
             </h1>
-            <p className="max-w-lg text-sm leading-7 text-neutral-600 sm:text-base">
-              Explore loving dogs ready for adoption, learn pet care tips, and
-              discover everything you need to give your furry friend a happy life.
+            <p className="max-w-lg text-base leading-relaxed text-neutral-600 sm:text-lg">
+              We connect loving dogs with caring families. Explore our current rescues, 
+              learn essential care tips, and join a community dedicated to animal welfare.
             </p>
-            <div className="mt-6">
-              <Button to="/about" variant="primary">
-                Explore Dogs
+            <div className="flex flex-wrap gap-4 pt-2">
+              <Button to="/articles" variant="primary" className="px-8 py-4">
+                Explore Care Guides
+              </Button>
+              <Button to="/about" className="px-8 py-4">
+                Our Mission
               </Button>
             </div>
           </div>
 
-          <div className="relative min-h-64 overflow-hidden rounded-3xl border-2 border-dashed border-orange-200 bg-orange-50">
+          <div className="relative aspect-square overflow-hidden rounded-3xl border-2 border-neutral-900 bg-orange-50 shadow-[12px_12px_0px_0px_rgba(255,145,77,0.2)]">
             <img
               src={heroLogo}
-              alt="Happy dog"
-              className="absolute inset-0 h-full w-full object-cover"
+              alt="A happy, smiling dog"
+              className="h-full w-full object-cover"
             />
           </div>
         </div>
       </section>
 
-      <section className="border-y-2 border-neutral-900 bg-white px-4 py-6 sm:px-6 sm:py-8">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-          Quick overview
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-neutral-900">
-          Our Community
-        </h2>
-
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { label: "Dogs Available", value: "12" },
-            { label: "Adoptions", value: "08" },
-            { label: "Happy Owners", value: "24" },
-            { label: "Rescue Centers", value: "04" },
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="rounded-3xl border-2 border-neutral-900 bg-orange-50 p-5"
-            >
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-                {item.label}
-              </p>
-              <p className="mt-2 text-2xl font-bold text-neutral-900">
-                {item.value}
-              </p>
-            </div>
-          ))}
-        </div>
+      {/* Community Stats */}
+      <section className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { label: "Dogs Rescued", value: "150+" },
+          { label: "Successful Adoptions", value: "124" },
+          { label: "Active Volunteers", value: "45" },
+          { label: "Partner Shelters", value: "12" },
+        ].map((item) => (
+          <div
+            key={item.label}
+            className="rounded-3xl border-2 border-neutral-900 bg-white p-6 transition-transform hover:-translate-y-1"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-neutral-400">
+              {item.label}
+            </p>
+            <p className="mt-2 text-3xl font-black text-neutral-900">
+              {item.value}
+            </p>
+          </div>
+        ))}
       </section>
 
-      <section className="border-y-2 border-neutral-900 bg-white px-4 py-6 sm:px-6 sm:py-8">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-          Featured Dogs
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-neutral-900">
-          Meet Your New Best Friend
-        </h2>
+      {/* Featured Dogs Section */}
+      <section className="mt-16 py-12">
+        <div className="mb-10 flex flex-col items-center text-center">
+          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-orange-600">
+            Adoptable Pups
+          </p>
+          <h2 className="mt-2 text-3xl font-black text-neutral-900 sm:text-4xl">
+            Meet Our Residents
+          </h2>
+        </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-3">
           {[
             {
               title: "Buddy",
-              body: "A playful and friendly dog who loves walks and cuddles.",
+              desc: "A golden ball of energy who loves fetch and long walks.",
               image: card1,
             },
             {
               title: "Max",
-              body: "Loyal and protective, perfect for families and homes.",
+              desc: "Loyal, calm, and highly trained. The perfect family protector.",
               image: card2,
             },
             {
               title: "Bella",
-              body: "Gentle and sweet, she enjoys quiet time and affection.",
+              desc: "A sweet soul who enjoys quiet afternoons and belly rubs.",
               image: card3,
             },
           ].map((card) => (
             <article
               key={card.title}
-              className="rounded-3xl border-2 border-neutral-900 bg-orange-50 p-5"
+              className="group rounded-3xl border-2 border-neutral-900 bg-white p-5 transition-all hover:shadow-[8px_8px_0px_0px_rgba(24,24,27,1)]"
             >
-              <div className="relative flex aspect-4/3 items-center justify-center overflow-hidden rounded-[1.25rem] bg-orange-100">
-                {card.image ? (
-                  <img
-                    src={card.image}
-                    alt={card.title}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="h-12 w-12 border-2 border-orange-200 bg-white" />
-                )}
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border-2 border-neutral-900 bg-orange-50">
+                <img
+                  src={card.image}
+                  alt={card.title}
+                  className="h-full w-full object-cover grayscale transition-all group-hover:grayscale-0"
+                />
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-neutral-900">
+              <h3 className="mt-5 text-2xl font-bold text-neutral-900">
                 {card.title}
               </h3>
-              <p className="mt-3 text-sm leading-6 text-neutral-600">
-                {card.body}
+              <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+                {card.desc}
               </p>
-              <Button className="mt-4" variant="primary">
+              <Button to="/about" className="mt-6 w-full" variant="primary">
                 View Profile
               </Button>
             </article>
