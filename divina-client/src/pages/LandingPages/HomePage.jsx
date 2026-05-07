@@ -1,8 +1,8 @@
-import Button from "../components/Button";
-import heroLogo from "../assets/hero/hero.jpg";
-import card1 from "../assets/cards/1.jpg";
-import card2 from "../assets/cards/2.jpg";
-import card3 from "../assets/cards/3.jpg";
+import Button from "../../components/Button";
+import heroLogo from "../../assets/hero/hero.jpg";
+import card1 from "../../assets/cards/1.jpg";
+import card2 from "../../assets/cards/2.jpg";
+import card3 from "../../assets/cards/3.jpg";
 
 const HomePage = () => {
   return (
