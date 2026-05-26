@@ -1,88 +1,63 @@
 import React from 'react';
-import { Box, Card, CardContent, Stack, Typography, LinearProgress } from '@mui/material';
+import { Box, Card, CardContent, LinearProgress, Stack, Typography } from '@mui/material';
+import {
+  brand,
+  dashboardCardSx,
+  dashboardEyebrowSx,
+  dashboardPageTitleSx,
+  dashboardSubtitleSx,
+} from '../../theme/dashboardTheme';
 
 function DashboardPage() {
   const stats = [
-    { label: 'Total Users', value: 1248, growth: '+12%', color: '#aa3bff' },
-    { label: 'Active Sessions', value: 384, growth: '+8%', color: '#aa3bff' },
-    { label: 'Appointments', value: 156, growth: '+24%', color: '#aa3bff' },
-    { label: 'Revenue', value: '$12,450', growth: '+18%', color: '#aa3bff' },
+    { label: 'Total Users', value: '1,248', growth: '+12%' },
+    { label: 'Active Sessions', value: '384', growth: '+8%' },
+    { label: 'Appointments', value: '156', growth: '+24%' },
+    { label: 'Revenue', value: '$12,450', growth: '+18%' },
   ];
 
   return (
-    <Box sx={{ p: 4, maxWidth: 1200, mx: 'auto' }}>
-      {/* Header */}
+    <Box>
       <Box sx={{ mb: 4 }}>
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, system-ui',
-            fontSize: 40,
-            fontWeight: 600,
-            color: '#08060d',
-            letterSpacing: '-1px',
-            mb: 1,
-          }}
-        >
+        <Typography sx={dashboardEyebrowSx}>Pet care overview</Typography>
+        <Typography component="h1" sx={dashboardPageTitleSx}>
           Dashboard
         </Typography>
-        <Typography sx={{ color: '#6b6375', fontSize: 16 }}>
-          Welcome back! Here's your pet care business overview.
+        <Typography sx={dashboardSubtitleSx}>
+          Welcome back. Track clients, appointments, and business performance from one place.
         </Typography>
       </Box>
 
-      {/* Stats Grid */}
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} mb={4}>
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ mb: 4 }}>
         {stats.map((stat) => (
-          <Card
-            key={stat.label}
-            sx={{
-              flex: 1,
-              backgroundColor: '#fff',
-              border: '1px solid #e5e4e7',
-              boxShadow: 'rgba(0, 0, 0, 0.1) 0 10px 15px -3px',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: 'rgba(170, 59, 255, 0.15) 0 20px 25px -5px',
-              },
-            }}
-          >
+          <Card key={stat.label} sx={dashboardCardSx}>
             <CardContent>
               <Typography
                 sx={{
-                  color: '#6b6375',
-                  fontSize: 13,
-                  fontWeight: 500,
+                  color: brand.muted,
+                  fontSize: 11,
+                  fontWeight: 700,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
+                  letterSpacing: '0.28em',
                   mb: 1,
                 }}
               >
                 {stat.label}
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 1 }}>
-                <Typography
-                  sx={{
-                    fontFamily: 'Poppins, system-ui',
-                    fontSize: 32,
-                    fontWeight: 600,
-                    color: '#08060d',
-                  }}
-                >
-                  {stat.value}
-                </Typography>
-                <Typography sx={{ color: stat.color, fontSize: 14, fontWeight: 600 }}>
-                  {stat.growth}
-                </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 1.5 }}>
+                <Typography sx={{ fontSize: 32, fontWeight: 900, color: brand.ink }}>{stat.value}</Typography>
+                <Typography sx={{ color: brand.orange, fontSize: 14, fontWeight: 800 }}>{stat.growth}</Typography>
               </Box>
               <LinearProgress
                 variant="determinate"
                 value={75}
                 sx={{
-                  height: 4,
-                  backgroundColor: '#e5e4e7',
+                  height: 6,
+                  borderRadius: 999,
+                  backgroundColor: '#e5e5e5',
                   '& .MuiLinearProgress-bar': {
-                    backgroundColor: stat.color,
+                    backgroundColor: brand.orange,
+                    borderRadius: 999,
                   },
                 }}
               />
@@ -91,29 +66,21 @@ function DashboardPage() {
         ))}
       </Stack>
 
-      {/* Welcome Card */}
       <Card
         sx={{
-          backgroundColor: 'rgba(170, 59, 255, 0.05)',
-          border: '1px solid rgba(170, 59, 255, 0.2)',
-          boxShadow: 'none',
+          ...dashboardCardSx,
+          backgroundColor: brand.orangeLight,
+          border: `2px solid ${brand.border}`,
+          boxShadow: '12px 12px 0px 0px rgba(234, 88, 12, 0.15)',
         }}
       >
         <CardContent>
-          <Typography
-            sx={{
-              fontFamily: 'Poppins, system-ui',
-              fontSize: 20,
-              fontWeight: 600,
-              color: '#08060d',
-              mb: 1,
-            }}
-          >
-            🐾 Manage Your Pet Care Business
+          <Typography sx={{ fontSize: 22, fontWeight: 900, color: brand.ink, mb: 1 }}>
+            Manage your pet care business
           </Typography>
-          <Typography sx={{ color: '#6b6375', lineHeight: 1.6 }}>
-            Track your clients, manage appointments, and view detailed reports. Use the navigation
-            above to explore Reports for analytics and Users to manage your customer base.
+          <Typography sx={{ color: brand.muted, lineHeight: 1.7 }}>
+            Use Reports for analytics and printable summaries, and Users to search, filter, and manage your client
+            directory with validated forms.
           </Typography>
         </CardContent>
       </Card>

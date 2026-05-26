@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -22,9 +23,16 @@ import {
   TableRow,
   TextField,
   Typography,
-  Alert,
 } from '@mui/material';
 import usersData from '../../data/users.json';
+import {
+  brand,
+  dashboardCardSx,
+  dashboardEyebrowSx,
+  dashboardPageTitleSx,
+  dashboardSubtitleSx,
+} from '../../theme/dashboardTheme';
+import { openPrintReport } from '../../utils/printReport';
 
 const roles = ['admin', 'editor', 'viewer'];
 const genders = ['male', 'female', 'other'];
@@ -56,12 +64,13 @@ function UsersPage() {
 
   const validateForm = () => {
     const errors = {};
+    const ageValue = Number(formData.age);
 
     if (!formData.firstName.trim()) errors.firstName = 'First name is required';
     if (!formData.lastName.trim()) errors.lastName = 'Last name is required';
     if (!formData.age) errors.age = 'Age is required';
-    if (!/^\d+$/.test(formData.age)) errors.age = 'Age must be a number only';
-    if (formData.age < 18 || formData.age > 120) errors.age = 'Age must be between 18 and 120';
+    if (!/^\d+$/.test(String(formData.age))) errors.age = 'Age must be a number only';
+    if (!errors.age && (ageValue < 18 || ageValue > 120)) errors.age = 'Age must be between 18 and 120';
     if (!formData.gender) errors.gender = 'Gender is required';
     if (!formData.contactNumber) errors.contactNumber = 'Contact number is required';
     if (!/^\d{11}$/.test(formData.contactNumber)) errors.contactNumber = 'Contact number must be 11 digits';
@@ -81,7 +90,7 @@ function UsersPage() {
   const handleOpenDialog = (user = null) => {
     if (user) {
       setEditingId(user.id);
-      setFormData(user);
+      setFormData({ ...user, password: '' });
     } else {
       setEditingId(null);
       setFormData({
@@ -111,21 +120,31 @@ function UsersPage() {
     if (!validateForm()) return;
 
     if (editingId) {
-      setUsers(users.map((u) => (u.id === editingId ? { ...formData, id: editingId } : u)));
+      setUsers(
+        users.map((user) =>
+          user.id === editingId
+            ? {
+                ...formData,
+                id: editingId,
+                password: formData.password || users.find((u) => u.id === editingId)?.password,
+              }
+            : user,
+        ),
+      );
     } else {
-      const newUser = { ...formData, id: Math.max(...users.map((u) => u.id), 0) + 1 };
-      setUsers([...users, newUser]);
+      const newId = users.length ? Math.max(...users.map((user) => user.id)) + 1 : 1;
+      setUsers([...users, { ...formData, id: newId }]);
     }
 
     handleCloseDialog();
   };
 
   const handleDeleteUser = (id) => {
-    setUsers(users.filter((u) => u.id !== id));
+    setUsers(users.filter((user) => user.id !== id));
   };
 
-  const handleFormChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleFormChange = (event) => {
+    const { name, value, type, checked } = event.target;
     setFormData({
       ...formData,
       [name]: type === 'checkbox' ? checked : value,
@@ -155,135 +174,37 @@ function UsersPage() {
   const adminCount = users.filter((user) => user.role === 'admin').length;
 
   const handlePrint = () => {
-    const printContent = printRef.current;
-    if (!printContent) return;
+    if (!printRef.current) return;
 
-    const printWindow = window.open('', '_blank', 'width=1200,height=900');
-    if (!printWindow) return;
-
-    const headMarkup = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
-      .map((node) => node.outerHTML)
-      .join('');
-
-    const exportedAt = new Intl.DateTimeFormat('en-US', {
-      dateStyle: 'long',
-      timeStyle: 'short',
-    }).format(new Date());
-
-    printWindow.document.write(`<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Users Report</title>
-    ${headMarkup}
-    <style>
-      @page {
-        size: A4;
-        margin: 16mm;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: #fff;
-        color: #1f2937;
-      }
-
-      .report-shell {
-        padding: 28px;
-      }
-
-      .report-header {
-        margin-bottom: 24px;
-        padding-bottom: 14px;
-        border-bottom: 1px solid #d1d5db;
-      }
-
-      .report-header h1 {
-        margin: 0 0 6px;
-        font-size: 28px;
-        font-weight: 700;
-      }
-
-      .report-header p {
-        margin: 0;
-        font-size: 14px;
-        color: #6b7280;
-        line-height: 1.5;
-      }
-
-      .report-content table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-      }
-
-      .report-content th,
-      .report-content td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #e5e7eb;
-        font-size: 12px;
-      }
-
-      .report-content th {
-        background-color: #f3f4f6;
-        font-weight: 600;
-        color: #1f2937;
-      }
-
-      .report-content tr:nth-child(even) {
-        background-color: #f9fafb;
-      }
-    </style>
-  </head>
-  <body>
-    <main class="report-shell">
-      <header class="report-header">
-        <h1>Users & Members Report</h1>
-        <p>Complete user directory with roles, contact information, and membership status.</p>
-        <p>Prepared on ${exportedAt}</p>
-      </header>
-      <section class="report-content">
-        ${printContent.outerHTML}
-      </section>
-    </main>
-  </body>
-</html>`);
-
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
+    openPrintReport({
+      title: 'Users & Members Report',
+      description: 'Filtered user directory with roles, contact information, and membership status.',
+      contentHtml: printRef.current.outerHTML,
+    });
   };
 
-  const getStatusColor = (isActive) => (isActive ? '#aa3bff' : '#d32f2f');
-  const getStatusBgColor = (isActive) => (isActive ? 'rgba(170, 59, 255, 0.1)' : 'rgba(211, 47, 47, 0.1)');
+  const statCards = [
+    { label: 'Total Users', value: users.length, color: brand.orange },
+    { label: 'Active', value: activeCount, color: brand.orange },
+    { label: 'Inactive', value: inactiveCount, color: '#dc2626' },
+    { label: 'Admins', value: adminCount, color: brand.ink },
+  ];
 
   return (
-    <Box sx={{ p: 4, maxWidth: 1400, mx: 'auto' }}>
-      {/* Header with Print Button */}
-      <Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', md: 'center' }} spacing={2} sx={{ mb: 4 }}>
+    <Box>
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        justifyContent="space-between"
+        alignItems={{ xs: 'flex-start', md: 'center' }}
+        spacing={2}
+        sx={{ mb: 4 }}
+      >
         <Box>
-          <Typography
-            sx={{
-              fontFamily: 'Poppins, system-ui',
-              fontSize: 40,
-              fontWeight: 600,
-              color: '#08060d',
-              letterSpacing: '-1px',
-              mb: 1,
-            }}
-          >
-            👥 Users & Clients
+          <Typography sx={dashboardEyebrowSx}>Client directory</Typography>
+          <Typography component="h1" sx={dashboardPageTitleSx}>
+            Users & Clients
           </Typography>
-          <Typography sx={{ color: '#6b6375', fontSize: 16 }}>
-            Manage your client base and view member details.
-          </Typography>
+          <Typography sx={dashboardSubtitleSx}>Manage your client base, search members, and export printable lists.</Typography>
         </Box>
 
         <Stack direction="row" spacing={1.5} flexWrap="wrap" useFlexGap>
@@ -291,72 +212,47 @@ function UsersPage() {
             Add User
           </Button>
           <Button variant="outlined" onClick={handlePrint}>
-            Print
+            Print PDF
           </Button>
         </Stack>
       </Stack>
 
-      {/* Summary Stats */}
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} mb={4}>
-        <Card sx={{ flex: 1, backgroundColor: '#fff', border: '1px solid #e5e4e7', boxShadow: 'rgba(0, 0, 0, 0.1) 0 10px 15px -3px' }}>
-          <CardContent>
-            <Typography sx={{ color: '#6b6375', fontSize: 13, fontWeight: 500, textTransform: 'uppercase', mb: 1 }}>
-              Total Users
-            </Typography>
-            <Typography sx={{ fontFamily: 'Poppins, system-ui', fontSize: 36, fontWeight: 600, color: '#aa3bff' }}>
-              {users.length}
-            </Typography>
-          </CardContent>
-        </Card>
-
-        <Card sx={{ flex: 1, backgroundColor: '#fff', border: '1px solid #e5e4e7', boxShadow: 'rgba(0, 0, 0, 0.1) 0 10px 15px -3px' }}>
-          <CardContent>
-            <Typography sx={{ color: '#6b6375', fontSize: 13, fontWeight: 500, textTransform: 'uppercase', mb: 1 }}>
-              Active
-            </Typography>
-            <Typography sx={{ fontFamily: 'Poppins, system-ui', fontSize: 36, fontWeight: 600, color: '#aa3bff' }}>
-              {activeCount}
-            </Typography>
-          </CardContent>
-        </Card>
-
-        <Card sx={{ flex: 1, backgroundColor: '#fff', border: '1px solid #e5e4e7', boxShadow: 'rgba(0, 0, 0, 0.1) 0 10px 15px -3px' }}>
-          <CardContent>
-            <Typography sx={{ color: '#6b6375', fontSize: 13, fontWeight: 500, textTransform: 'uppercase', mb: 1 }}>
-              Inactive
-            </Typography>
-            <Typography sx={{ fontFamily: 'Poppins, system-ui', fontSize: 36, fontWeight: 600, color: '#d32f2f' }}>
-              {inactiveCount}
-            </Typography>
-          </CardContent>
-        </Card>
-
-        <Card sx={{ flex: 1, backgroundColor: '#fff', border: '1px solid #e5e4e7', boxShadow: 'rgba(0, 0, 0, 0.1) 0 10px 15px -3px' }}>
-          <CardContent>
-            <Typography sx={{ color: '#6b6375', fontSize: 13, fontWeight: 500, textTransform: 'uppercase', mb: 1 }}>
-              Admins
-            </Typography>
-            <Typography sx={{ fontFamily: 'Poppins, system-ui', fontSize: 36, fontWeight: 600, color: '#ff9800' }}>
-              {adminCount}
-            </Typography>
-          </CardContent>
-        </Card>
+      <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ mb: 4 }}>
+        {statCards.map((stat) => (
+          <Card key={stat.label} sx={{ ...dashboardCardSx, flex: 1 }}>
+            <CardContent>
+              <Typography
+                sx={{
+                  color: brand.muted,
+                  fontSize: 11,
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.28em',
+                  mb: 1,
+                }}
+              >
+                {stat.label}
+              </Typography>
+              <Typography sx={{ fontSize: 36, fontWeight: 900, color: stat.color }}>{stat.value}</Typography>
+            </CardContent>
+          </Card>
+        ))}
       </Stack>
 
-      {/* Search and Filters Card */}
-      <Card sx={{ backgroundColor: '#fff', border: '1px solid #e5e4e7', boxShadow: 'rgba(0, 0, 0, 0.1) 0 10px 15px -3px', mb: 3 }}>
+      <Card sx={{ ...dashboardCardSx, mb: 3 }}>
         <CardContent>
-          <Typography sx={{ fontWeight: 600, color: '#08060d', mb: 2 }}>Search & Filters</Typography>
+          <Typography sx={{ fontWeight: 800, color: brand.ink, mb: 2 }}>Search & Filters</Typography>
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
             <TextField
-              placeholder="Search by firstName, lastName, email, or username..."
+              placeholder="Search by first name, last name, email, or username..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(event) => setSearchTerm(event.target.value)}
               sx={{ flex: 1 }}
+              fullWidth
             />
             <FormControl sx={{ minWidth: 150 }}>
               <InputLabel>Role</InputLabel>
-              <Select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} label="Role">
+              <Select value={roleFilter} onChange={(event) => setRoleFilter(event.target.value)} label="Role">
                 <MenuItem value="">All Roles</MenuItem>
                 {roles.map((role) => (
                   <MenuItem key={role} value={role}>
@@ -367,7 +263,7 @@ function UsersPage() {
             </FormControl>
             <FormControl sx={{ minWidth: 150 }}>
               <InputLabel>Gender</InputLabel>
-              <Select value={genderFilter} onChange={(e) => setGenderFilter(e.target.value)} label="Gender">
+              <Select value={genderFilter} onChange={(event) => setGenderFilter(event.target.value)} label="Gender">
                 <MenuItem value="">All Genders</MenuItem>
                 {genders.map((gender) => (
                   <MenuItem key={gender} value={gender}>
@@ -378,7 +274,7 @@ function UsersPage() {
             </FormControl>
             <FormControl sx={{ minWidth: 150 }}>
               <InputLabel>Status</InputLabel>
-              <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} label="Status">
+              <Select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} label="Status">
                 <MenuItem value="">All Status</MenuItem>
                 <MenuItem value="active">Active</MenuItem>
                 <MenuItem value="inactive">Inactive</MenuItem>
@@ -388,38 +284,21 @@ function UsersPage() {
         </CardContent>
       </Card>
 
-      {/* Users Table */}
-      <Card sx={{ backgroundColor: '#fff', border: '1px solid #e5e4e7', boxShadow: 'rgba(0, 0, 0, 0.1) 0 10px 15px -3px' }}>
+      <Card sx={dashboardCardSx}>
         <CardContent>
           <div ref={printRef}>
             <TableContainer>
               <Table>
                 <TableHead>
-                  <TableRow sx={{ backgroundColor: 'rgba(170, 59, 255, 0.05)' }}>
-                    <TableCell sx={{ fontFamily: 'Poppins, system-ui', fontWeight: 600, color: '#08060d', borderBottom: '2px solid #e5e4e7' }}>
-                      ID
-                    </TableCell>
-                    <TableCell sx={{ fontFamily: 'Poppins, system-ui', fontWeight: 600, color: '#08060d', borderBottom: '2px solid #e5e4e7' }}>
-                      Name
-                    </TableCell>
-                    <TableCell sx={{ fontFamily: 'Poppins, system-ui', fontWeight: 600, color: '#08060d', borderBottom: '2px solid #e5e4e7' }}>
-                      Email
-                    </TableCell>
-                    <TableCell sx={{ fontFamily: 'Poppins, system-ui', fontWeight: 600, color: '#08060d', borderBottom: '2px solid #e5e4e7' }}>
-                      Role
-                    </TableCell>
-                    <TableCell sx={{ fontFamily: 'Poppins, system-ui', fontWeight: 600, color: '#08060d', borderBottom: '2px solid #e5e4e7' }}>
-                      Gender
-                    </TableCell>
-                    <TableCell sx={{ fontFamily: 'Poppins, system-ui', fontWeight: 600, color: '#08060d', borderBottom: '2px solid #e5e4e7' }}>
-                      Age
-                    </TableCell>
-                    <TableCell sx={{ fontFamily: 'Poppins, system-ui', fontWeight: 600, color: '#08060d', borderBottom: '2px solid #e5e4e7' }}>
-                      Status
-                    </TableCell>
-                    <TableCell sx={{ fontFamily: 'Poppins, system-ui', fontWeight: 600, color: '#08060d', borderBottom: '2px solid #e5e4e7', textAlign: 'center' }}>
-                      Actions
-                    </TableCell>
+                  <TableRow>
+                    <TableCell>ID</TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Role</TableCell>
+                    <TableCell>Gender</TableCell>
+                    <TableCell>Age</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell align="center">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -427,32 +306,30 @@ function UsersPage() {
                     <TableRow
                       key={user.id}
                       sx={{
-                        backgroundColor: index % 2 === 0 ? '#fff' : 'rgba(244, 243, 236, 0.3)',
-                        '&:hover': { backgroundColor: 'rgba(170, 59, 255, 0.05)' },
-                        transition: 'background-color 0.2s ease',
+                        backgroundColor: index % 2 === 0 ? '#fff' : brand.orangeLight,
+                        '&:hover': { backgroundColor: 'rgba(234, 88, 12, 0.08)' },
                       }}
                     >
-                      <TableCell sx={{ color: '#6b6375', fontSize: 14 }}>{user.id}</TableCell>
-                      <TableCell sx={{ color: '#08060d', fontSize: 14, fontWeight: 500, fontFamily: 'Poppins, system-ui' }}>
+                      <TableCell sx={{ color: brand.muted }}>{user.id}</TableCell>
+                      <TableCell sx={{ fontWeight: 700, color: brand.ink }}>
                         {user.firstName} {user.lastName}
                       </TableCell>
-                      <TableCell sx={{ color: '#6b6375', fontSize: 14 }}>{user.email}</TableCell>
-                      <TableCell sx={{ color: '#6b6375', fontSize: 14 }}>{user.role}</TableCell>
-                      <TableCell sx={{ color: '#6b6375', fontSize: 14 }}>{user.gender}</TableCell>
-                      <TableCell sx={{ color: '#6b6375', fontSize: 14 }}>{user.age}</TableCell>
+                      <TableCell sx={{ color: brand.muted }}>{user.email}</TableCell>
+                      <TableCell sx={{ color: brand.muted, textTransform: 'capitalize' }}>{user.role}</TableCell>
+                      <TableCell sx={{ color: brand.muted, textTransform: 'capitalize' }}>{user.gender}</TableCell>
+                      <TableCell sx={{ color: brand.muted }}>{user.age}</TableCell>
                       <TableCell>
                         <Chip
                           label={user.isActive ? 'Active' : 'Inactive'}
                           sx={{
-                            backgroundColor: getStatusBgColor(user.isActive),
-                            color: getStatusColor(user.isActive),
-                            fontWeight: 600,
-                            border: `1px solid ${getStatusColor(user.isActive)}`,
-                            fontSize: 12,
+                            backgroundColor: user.isActive ? brand.orangeLight : 'rgba(220, 38, 38, 0.1)',
+                            color: user.isActive ? brand.orange : '#dc2626',
+                            fontWeight: 700,
+                            border: `2px solid ${user.isActive ? brand.orange : '#dc2626'}`,
                           }}
                         />
                       </TableCell>
-                      <TableCell sx={{ textAlign: 'center' }}>
+                      <TableCell align="center">
                         <Button size="small" onClick={() => handleOpenDialog(user)} sx={{ mr: 1 }}>
                           Edit
                         </Button>
@@ -469,25 +346,22 @@ function UsersPage() {
 
           {filteredUsers.length === 0 && (
             <Box sx={{ textAlign: 'center', py: 4 }}>
-              <Typography sx={{ color: '#6b6375', fontSize: 16 }}>
-                No users found matching your search.
-              </Typography>
+              <Typography sx={{ color: brand.muted }}>No users found matching your search or filters.</Typography>
             </Box>
           )}
         </CardContent>
       </Card>
 
-      {/* Add/Edit User Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>{editingId ? 'Edit User' : 'Add User'}</DialogTitle>
-        <DialogContent sx={{ pt: 3 }}>
-          {Object.values(formErrors).some((err) => err) && (
+        <DialogTitle sx={{ fontWeight: 900 }}>{editingId ? 'Edit User' : 'Add User'}</DialogTitle>
+        <DialogContent sx={{ pt: 2 }}>
+          {Object.values(formErrors).some((error) => error) && (
             <Alert severity="error" sx={{ mb: 2 }}>
-              Please fix the errors below
+              Please fix the errors below before saving.
             </Alert>
           )}
 
-          <Stack spacing={2}>
+          <Stack spacing={2} sx={{ mt: 1 }}>
             <TextField
               label="First Name"
               name="firstName"
@@ -509,22 +383,26 @@ function UsersPage() {
             <TextField
               label="Age"
               name="age"
-              type="text"
               value={formData.age}
               onChange={handleFormChange}
               error={!!formErrors.age}
-              helperText={formErrors.age}
+              helperText={formErrors.age || 'Numbers only'}
               fullWidth
             />
             <FormControl fullWidth error={!!formErrors.gender}>
               <InputLabel>Gender</InputLabel>
               <Select name="gender" value={formData.gender} onChange={handleFormChange} label="Gender">
-                {genders.map((g) => (
-                  <MenuItem key={g} value={g}>
-                    {g.charAt(0).toUpperCase() + g.slice(1)}
+                {genders.map((gender) => (
+                  <MenuItem key={gender} value={gender}>
+                    {gender.charAt(0).toUpperCase() + gender.slice(1)}
                   </MenuItem>
                 ))}
               </Select>
+              {formErrors.gender && (
+                <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
+                  {formErrors.gender}
+                </Typography>
+              )}
             </FormControl>
             <TextField
               label="Contact Number"
@@ -532,7 +410,7 @@ function UsersPage() {
               value={formData.contactNumber}
               onChange={handleFormChange}
               error={!!formErrors.contactNumber}
-              helperText={formErrors.contactNumber}
+              helperText={formErrors.contactNumber || 'Must be exactly 11 digits'}
               fullWidth
             />
             <TextField
@@ -547,12 +425,17 @@ function UsersPage() {
             <FormControl fullWidth error={!!formErrors.role}>
               <InputLabel>Role</InputLabel>
               <Select name="role" value={formData.role} onChange={handleFormChange} label="Role">
-                {roles.map((r) => (
-                  <MenuItem key={r} value={r}>
-                    {r.charAt(0).toUpperCase() + r.slice(1)}
+                {roles.map((role) => (
+                  <MenuItem key={role} value={role}>
+                    {role.charAt(0).toUpperCase() + role.slice(1)}
                   </MenuItem>
                 ))}
               </Select>
+              {formErrors.role && (
+                <Typography variant="caption" color="error" sx={{ mt: 0.5, ml: 1.5 }}>
+                  {formErrors.role}
+                </Typography>
+              )}
             </FormControl>
             <TextField
               label="Username"
@@ -560,7 +443,7 @@ function UsersPage() {
               value={formData.username}
               onChange={handleFormChange}
               error={!!formErrors.username}
-              helperText={formErrors.username}
+              helperText={formErrors.username || 'No spaces allowed'}
               fullWidth
             />
             <TextField
@@ -570,7 +453,7 @@ function UsersPage() {
               value={formData.password}
               onChange={handleFormChange}
               error={!!formErrors.password}
-              helperText={formErrors.password || (editingId ? 'Leave blank to keep current' : 'Min 8 characters')}
+              helperText={formErrors.password || (editingId ? 'Leave blank to keep current password' : 'At least 8 characters')}
               fullWidth
             />
             <TextField
@@ -586,12 +469,14 @@ function UsersPage() {
             />
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleFormChange} />
-              <Typography sx={{ fontSize: 14 }}>Active User</Typography>
+              <Typography sx={{ fontSize: 14 }}>Active user</Typography>
             </Box>
           </Stack>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button onClick={handleCloseDialog} variant="outlined">
+            Cancel
+          </Button>
           <Button onClick={handleSaveUser} variant="contained">
             Save
           </Button>
