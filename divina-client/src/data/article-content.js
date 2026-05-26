@@ -1,9 +1,9 @@
 // article-content.js
-import img1 from './cards/1.jpg';
-import img2 from './cards/2.jpg';
-import img3 from './cards/3.jpg';
-import img4 from './cards/4.jpg';
-import img5 from './cards/5.jpg';
+import img1 from '../assets/cards/1.jpg';
+import img2 from '../assets/cards/2.jpg';
+import img3 from '../assets/cards/3.jpg';
+import img4 from '../assets/cards/4.jpg';
+import img5 from '../assets/cards/5.jpg';
 
 const articles = [
   {
