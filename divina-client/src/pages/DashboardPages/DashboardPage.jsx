@@ -7,8 +7,10 @@ import {
   dashboardPageTitleSx,
   dashboardSubtitleSx,
 } from '../../theme/dashboardTheme';
+import { getAuth } from '../../utils/auth';
 
 function DashboardPage() {
+  const { firstName, type } = getAuth();
   const stats = [
     { label: 'Total Users', value: '1,248', growth: '+12%' },
     { label: 'Active Sessions', value: '384', growth: '+8%' },
@@ -24,7 +26,8 @@ function DashboardPage() {
           Dashboard
         </Typography>
         <Typography sx={dashboardSubtitleSx}>
-          Welcome back. Track clients, appointments, and business performance from one place.
+          Welcome back{firstName ? `, ${firstName}` : ''}. Track clients, articles, and business performance from one
+          place{type ? ` — signed in as ${type}` : ''}.
         </Typography>
       </Box>
 
@@ -79,8 +82,8 @@ function DashboardPage() {
             Manage your pet care business
           </Typography>
           <Typography sx={{ color: brand.muted, lineHeight: 1.7 }}>
-            Use Reports for analytics and printable summaries, and Users to search, filter, and manage your client
-            directory with validated forms.
+            Use Reports for analytics, Articles to manage care guides on the public site
+            {type === 'admin' ? ', and Users to search, filter, and manage your client directory' : ''}.
           </Typography>
         </CardContent>
       </Card>

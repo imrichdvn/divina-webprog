@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Box,
@@ -24,7 +24,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import usersData from '../../data/users.json';
+import { createUser, deleteUser, fetchUsers, updateUser } from '../../services/UserService';
 import {
   brand,
   dashboardCardSx,
@@ -37,8 +37,21 @@ import { openPrintReport } from '../../utils/printReport';
 const roles = ['admin', 'editor', 'viewer'];
 const genders = ['male', 'female', 'other'];
 
+const mapUserFromApi = (user) => ({
+  ...user,
+  id: user._id,
+  role: user.type,
+});
+
+const mapUserToApi = (formData) => {
+  const { id, role, ...rest } = formData;
+  return { ...rest, type: role };
+};
+
 function UsersPage() {
-  const [users, setUsers] = useState(usersData);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pageError, setPageError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
   const [genderFilter, setGenderFilter] = useState('');
@@ -47,6 +60,23 @@ function UsersPage() {
   const [editingId, setEditingId] = useState(null);
   const [formErrors, setFormErrors] = useState({});
   const printRef = useRef(null);
+
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+      const { data } = await fetchUsers();
+      setUsers((data.users || []).map(mapUserFromApi));
+      setPageError('');
+    } catch (err) {
+      setPageError(err.response?.data?.message || 'Failed to load users.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadUsers();
+  }, []);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -116,31 +146,33 @@ function UsersPage() {
     setFormErrors({});
   };
 
-  const handleSaveUser = () => {
+  const handleSaveUser = async () => {
     if (!validateForm()) return;
 
-    if (editingId) {
-      setUsers(
-        users.map((user) =>
-          user.id === editingId
-            ? {
-                ...formData,
-                id: editingId,
-                password: formData.password || users.find((u) => u.id === editingId)?.password,
-              }
-            : user,
-        ),
-      );
-    } else {
-      const newId = users.length ? Math.max(...users.map((user) => user.id)) + 1 : 1;
-      setUsers([...users, { ...formData, id: newId }]);
+    try {
+      const payload = mapUserToApi(formData);
+      if (editingId) {
+        if (!payload.password) {
+          delete payload.password;
+        }
+        await updateUser(editingId, payload);
+      } else {
+        await createUser(payload);
+      }
+      await loadUsers();
+      handleCloseDialog();
+    } catch (err) {
+      setFormErrors({ submit: err.response?.data?.message || 'Failed to save user.' });
     }
-
-    handleCloseDialog();
   };
 
-  const handleDeleteUser = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
+  const handleDeleteUser = async (id) => {
+    try {
+      await deleteUser(id);
+      await loadUsers();
+    } catch (err) {
+      setPageError(err.response?.data?.message || 'Failed to delete user.');
+    }
   };
 
   const handleFormChange = (event) => {
@@ -217,6 +249,12 @@ function UsersPage() {
         </Stack>
       </Stack>
 
+      {pageError && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {pageError}
+        </Alert>
+      )}
+
       <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ mb: 4 }}>
         {statCards.map((stat) => (
           <Card key={stat.label} sx={{ ...dashboardCardSx, flex: 1 }}>
@@ -286,6 +324,9 @@ function UsersPage() {
 
       <Card sx={dashboardCardSx}>
         <CardContent>
+          {loading ? (
+            <Typography sx={{ color: brand.muted, py: 4, textAlign: 'center' }}>Loading users…</Typography>
+          ) : (
           <div ref={printRef}>
             <TableContainer>
               <Table>
@@ -343,8 +384,9 @@ function UsersPage() {
               </Table>
             </TableContainer>
           </div>
+          )}
 
-          {filteredUsers.length === 0 && (
+          {!loading && filteredUsers.length === 0 && (
             <Box sx={{ textAlign: 'center', py: 4 }}>
               <Typography sx={{ color: brand.muted }}>No users found matching your search or filters.</Typography>
             </Box>
@@ -355,7 +397,12 @@ function UsersPage() {
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ fontWeight: 900 }}>{editingId ? 'Edit User' : 'Add User'}</DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
-          {Object.values(formErrors).some((error) => error) && (
+          {formErrors.submit && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {formErrors.submit}
+            </Alert>
+          )}
+          {Object.entries(formErrors).some(([key, value]) => value && key !== 'submit') && (
             <Alert severity="error" sx={{ mb: 2 }}>
               Please fix the errors below before saving.
             </Alert>

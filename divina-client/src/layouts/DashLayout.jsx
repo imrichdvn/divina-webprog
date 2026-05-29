@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { Box, ThemeProvider } from '@mui/material';
 import orangeLogo from '../assets/brand/orange.jpg';
 import { dashboardTheme } from '../theme/dashboardTheme';
+import { clearAuth, getAuth } from '../utils/auth';
 
 const dashLinkClass = ({ isActive }) =>
   [
@@ -13,6 +14,15 @@ const dashLinkClass = ({ isActive }) =>
   ].join(' ');
 
 function DashLayout() {
+  const navigate = useNavigate();
+  const { firstName, type } = getAuth();
+  const isAdmin = type === 'admin';
+
+  const handleLogout = () => {
+    clearAuth();
+    navigate('/auth/signin');
+  };
+
   return (
     <ThemeProvider theme={dashboardTheme}>
       <Box className="min-h-screen bg-stone-50 text-neutral-900">
@@ -28,23 +38,48 @@ function DashLayout() {
               </div>
             </Link>
 
-            <nav className="flex flex-wrap items-center gap-2">
-              <NavLink to="/dashboard" end className={dashLinkClass}>
-                Home
-              </NavLink>
-              <NavLink to="/dashboard/reports" className={dashLinkClass}>
-                Reports
-              </NavLink>
-              <NavLink to="/dashboard/users" className={dashLinkClass}>
-                Users
-              </NavLink>
-              <Link
-                to="/"
-                className="rounded-full border-2 border-neutral-900 bg-orange-500 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-white transition hover:bg-orange-600"
-              >
-                Back to Site
-              </Link>
-            </nav>
+            <div className="flex flex-wrap items-center gap-3">
+              {firstName && (
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">
+                  Welcome, <span className="text-neutral-900">{firstName}</span>
+                  {type && (
+                    <span className="ml-2 rounded-full border border-neutral-900 px-2 py-0.5 text-orange-600">
+                      {type}
+                    </span>
+                  )}
+                </p>
+              )}
+
+              <nav className="flex flex-wrap items-center gap-2">
+                <NavLink to="/dashboard" end className={dashLinkClass}>
+                  Home
+                </NavLink>
+                <NavLink to="/dashboard/reports" className={dashLinkClass}>
+                  Reports
+                </NavLink>
+                <NavLink to="/dashboard/articles" className={dashLinkClass}>
+                  Articles
+                </NavLink>
+                {isAdmin && (
+                  <NavLink to="/dashboard/users" className={dashLinkClass}>
+                    Users
+                  </NavLink>
+                )}
+                <Link
+                  to="/"
+                  className="rounded-full border-2 border-neutral-900 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-neutral-900 transition hover:bg-orange-50"
+                >
+                  Back to Site
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-full border-2 border-neutral-900 bg-orange-500 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-white transition hover:bg-orange-600"
+                >
+                  Logout
+                </button>
+              </nav>
+            </div>
           </div>
         </header>
 
