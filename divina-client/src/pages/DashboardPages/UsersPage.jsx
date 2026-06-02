@@ -34,7 +34,7 @@ import {
 } from '../../theme/dashboardTheme';
 import { openPrintReport } from '../../utils/printReport';
 
-const roles = ['admin', 'editor', 'viewer'];
+const roles = ['admin', 'editor', 'user'];
 const genders = ['male', 'female', 'other'];
 
 const mapUserFromApi = (user) => ({

@@ -11,7 +11,7 @@ function ProtectedRoute({ children, allowedRoles }) {
   if (allowedRoles?.length) {
     const userType = localStorage.getItem('type');
     if (!allowedRoles.includes(userType)) {
-      return <Navigate to="/dashboard" replace />;
+      return <Navigate to="/articles" replace />;
     }
   }
 

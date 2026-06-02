@@ -1,6 +1,7 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import orangeLogo from "../../assets/brand/orange.jpg";
 import { isAuthenticated } from "../../utils/auth";
+import { clearAuth, getAuth } from "../../utils/auth";
 
 const publicLinks = [
   { label: "Home", to: "/" },
@@ -18,11 +19,20 @@ const navLinkClassName = ({ isActive }) =>
 
 const NavBar = () => {
   const loggedIn = isAuthenticated();
+  const { type } = getAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    clearAuth();
+    navigate('/auth/signin');
+  };
 
   const links = [
     ...publicLinks,
     ...(loggedIn
-      ? [{ label: "Dashboard", to: "/dashboard" }]
+      ? type !== 'user'
+        ? [{ label: "Dashboard", to: "/dashboard" }]
+        : []
       : [
           { label: "Sign in", to: "/auth/signin" },
           { label: "Sign up", to: "/auth/signup" },
@@ -61,6 +71,15 @@ const NavBar = () => {
               {link.label}
             </NavLink>
           ))}
+          {loggedIn && (
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="rounded-full border-2 border-neutral-900 bg-white px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-neutral-900 transition hover:bg-orange-50"
+            >
+              Logout
+            </button>
+          )}
         </nav>
       </div>
     </header>

@@ -33,7 +33,7 @@ const routes = [
   {
     path: 'dashboard',
     element: (
-      <ProtectedRoute>
+      <ProtectedRoute allowedRoles={['admin', 'editor']}>
         <DashLayout />
       </ProtectedRoute>
     ),

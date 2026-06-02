@@ -41,18 +41,13 @@ const SignInPage = () => {
     try {
       const { data } = await loginUser({ email, password });
 
-      if (data.type === 'viewer') {
-        setError('Viewer accounts cannot sign in. Please contact an administrator.');
-        return;
-      }
-
       setAuth({
         token: data.token,
         type: data.type,
         firstName: data.firstName,
       });
 
-      navigate('/dashboard', {
+      navigate(data.type === 'user' ? '/articles' : '/dashboard', {
         state: { firstName: data.firstName, type: data.type },
       });
     } catch (err) {

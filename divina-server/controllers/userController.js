@@ -19,8 +19,8 @@ const createUser = async (req, res) => {
     }
 
     const isAdmin = req.user?.type === 'admin';
-    const requestedType = req.body.type || 'viewer';
-    const type = isAdmin ? requestedType : 'viewer';
+    const requestedType = req.body.type || 'user';
+    const type = isAdmin ? requestedType : 'user';
     const isActive = isAdmin ? req.body.isActive ?? true : true;
 
     // Hash the password
@@ -81,10 +81,7 @@ const loginUser = async (req, res) => {
       return res.status(403).json({ message: 'Your account is inactive. Please contact support.' });
     }
 
-    // Enhancement 1: viewers cannot log in
-    if (user.type === 'viewer') {
-      return res.status(403).json({ message: 'Viewer accounts cannot sign in. Please contact an administrator.' });
-    }
+    // Allow regular user login; only inactive accounts are blocked here.
 
     // Compare the provided password with the hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);

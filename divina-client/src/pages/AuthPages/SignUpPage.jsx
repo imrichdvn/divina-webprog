@@ -70,10 +70,10 @@ const SignUpPage = () => {
     try {
       await createUser({
         ...formData,
-        type: 'viewer',
+        type: 'user',
         isActive: true,
       });
-      setSuccess('Account created! Viewer accounts cannot sign in — contact an admin for elevated access.');
+      setSuccess('Account created! You can now sign in and browse articles.');
       setFormData(emptyForm);
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
@@ -95,7 +95,7 @@ const SignUpPage = () => {
             <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-orange-600">Sign up</p>
             <h1 className="mt-4 text-4xl font-black text-neutral-900 sm:text-5xl">Create your account</h1>
             <p className="mt-4 text-base text-neutral-600">
-              Register with the same details used in our client directory. New accounts are created as viewers.
+              Register with the same details used in our client directory. New accounts are created as regular users.
             </p>
           </div>
 
