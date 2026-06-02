@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "projects": [
+    {
+      "name": "divina-server",
+      "rootDirectory": "divina-server"
+    },
+    {
+      "name": "divina-client",
+      "rootDirectory": "divina-client"
+    }
+  ]
+}
