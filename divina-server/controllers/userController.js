@@ -18,11 +18,21 @@ const createUser = async (req, res) => {
       return res.status(400).json({ message: 'Password is required' });
     }
 
+    const isAdmin = req.user?.type === 'admin';
+    const requestedType = req.body.type || 'viewer';
+    const type = isAdmin ? requestedType : 'viewer';
+    const isActive = isAdmin ? req.body.isActive ?? true : true;
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     // Create the user with the hashed password
-    const user = await User.create({ ...req.body, password: hashedPassword });
+    const user = await User.create({
+      ...req.body,
+      password: hashedPassword,
+      type,
+      isActive,
+    });
 
     res.status(201).json(user);
   } catch (error) {

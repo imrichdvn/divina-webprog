@@ -1,16 +1,22 @@
 import axios from 'axios';
 import constants from '../constants';
+import { getAuth } from '../utils/auth';
 
 const API = axios.create({
   baseURL: `${constants.HOST}/users`,
 });
 
-export const fetchUsers = () => API.get('/');
+const getProtectedConfig = () => {
+  const { token } = getAuth();
+  return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+};
 
-export const createUser = (user) => API.post('/', user);
+export const fetchUsers = () => API.get('/', getProtectedConfig());
 
-export const updateUser = (id, user) => API.put(`/${id}`, user);
+export const createUser = (user) => API.post('/', user, getProtectedConfig());
 
-export const deleteUser = (id) => API.delete(`/${id}`);
+export const updateUser = (id, user) => API.put(`/${id}`, user, getProtectedConfig());
+
+export const deleteUser = (id) => API.delete(`/${id}`, getProtectedConfig());
 
 export const loginUser = (credentials) => API.post('/login', credentials);
