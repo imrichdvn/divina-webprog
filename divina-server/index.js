@@ -23,6 +23,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Divina API is running' });
+});
+
 app.use('/api/users', userRoutes);
 app.use('/api/articles', articleRoutes);
 
