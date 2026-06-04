@@ -20,10 +20,15 @@ const corsOptions = {
     'http://localhost:3000',
   ],
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
   optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
+
+// Explicit OPTIONS handler for preflight requests
+app.options('*', cors(corsOptions));
 
 app.use((req, res, next) => {
   res.setHeader(
