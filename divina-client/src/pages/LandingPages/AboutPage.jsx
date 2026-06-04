@@ -1,9 +1,7 @@
 import Button from "../../components/Button";
 import about from "../../assets/about/about.png";
 import card1 from "../../assets/articles/11.jpg";
-import card2 from "../../assets/articles/22.jpg";
 import card3 from "../../assets/articles/33.jpg";
-import card4 from "../../assets/articles/44.jpg";
 
 const AboutPage = () => {
   return (
@@ -28,7 +26,7 @@ const AboutPage = () => {
               <Button to="/articles">Pet Care Resources</Button>
             </div>
           </div>
-          <div className="order-1 lg:order-2 aspec-[4/3] overflow-hidden rounded-2xl border-2 border-neutral-900">
+          <div className="order-1 lg:order-2 aspect-[4/3] overflow-hidden rounded-2xl border-2 border-neutral-900">
             <img src={about} alt="Dogs playing together" className="h-full w-full object-cover" />
           </div>
         </div>

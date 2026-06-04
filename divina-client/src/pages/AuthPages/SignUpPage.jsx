@@ -85,6 +85,8 @@ const SignUpPage = () => {
               <span className="text-sm font-semibold text-neutral-700">Password</span>
               <input
                 type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
                 placeholder="Create a password"
                 className="mt-2 w-full rounded-3xl border-2 border-neutral-900 bg-stone-50 px-4 py-3 text-neutral-900 focus:border-orange-500 focus:outline-none"
               />
