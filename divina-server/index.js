@@ -12,30 +12,31 @@ connectDB().then(seedDatabase);
 
 app.use(express.json());
 
-// CORS configuration for production and development
-const corsOptions = {
-  origin: [
+// Manual CORS headers middleware - works better with Vercel serverless
+app.use((req, res, next) => {
+  const allowedOrigins = [
     'https://divina-webprog2.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000',
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
-  optionsSuccessStatus: 200,
-};
-
-app.use(cors(corsOptions));
-
-// Explicit OPTIONS handler for preflight requests
-app.options('*', cors(corsOptions));
-
-app.use((req, res, next) => {
+  ];
+  
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   );
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
   next();
 });
 
