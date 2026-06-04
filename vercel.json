@@ -1,14 +1,7 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "divina-client/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
+  "buildCommand": "cd divina-client && npm install && npm run build",
+  "outputDirectory": "divina-client/dist",
   "routes": [
     {
       "src": "^/(.*)$",
