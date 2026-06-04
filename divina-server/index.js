@@ -11,10 +11,21 @@ const app = express();
 connectDB().then(seedDatabase);
 
 app.use(express.json());
-app.use(cors());
+
+// CORS configuration for production and development
+const corsOptions = {
+  origin: [
+    'https://divina-webprog2.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000',
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization',
