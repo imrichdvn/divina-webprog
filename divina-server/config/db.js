@@ -1,18 +1,29 @@
 const mongoose = require('mongoose');
 
+// Global cached connection for Vercel serverless functions
+let cachedConnection = null;
+
 const connectDB = async () => {
   if (!process.env.MONGODB_URI) {
-    console.error('Error: MONGODB_URI is not defined in your .env file.');
-    process.exit(1);
+    throw new Error('MONGODB_URI is not defined in your .env file.');
+  }
+
+  // Return cached connection if available
+  if (cachedConnection) {
+    return cachedConnection;
   }
 
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
+    
+    // Cache the connection for reuse
+    cachedConnection = conn;
+    
+    return conn;
   } catch (error) {
     console.error(`Error: ${error.message}`);
-    // Exit process with failure
-    process.exit(1);
+    throw error;
   }
 };
 
