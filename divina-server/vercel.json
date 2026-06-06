@@ -4,13 +4,22 @@
   "builds": [
     {
       "src": "index.js",
-      "use": "@vercel/node",
-      "config": {
-        "zeroConfig": true
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/index.js"
+    },
+    {
+      "src": "/users/(.*)",
+      "dest": "/index.js"
+    },
+    {
+      "src": "/articles/(.*)",
+      "dest": "/index.js"
+    },
     {
       "src": "/(.*)",
       "dest": "/index.js"
