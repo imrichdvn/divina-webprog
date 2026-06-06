@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 // Global cached connection for Vercel serverless functions
 let cachedConnection = null;
+let cachedPromise = null;
 
 const connectDB = async () => {
   if (!process.env.MONGODB_URI) {
@@ -13,8 +14,17 @@ const connectDB = async () => {
     return cachedConnection;
   }
 
+  if (cachedPromise) {
+    return cachedPromise;
+  }
+
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    cachedPromise = mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 8000,
+      bufferCommands: false,
+    });
+
+    const conn = await cachedPromise;
     console.log(`MongoDB Connected: ${conn.connection.host}`);
     
     // Cache the connection for reuse
@@ -22,6 +32,7 @@ const connectDB = async () => {
     
     return conn;
   } catch (error) {
+    cachedPromise = null;
     console.error(`Error: ${error.message}`);
     throw error;
   }

@@ -1,16 +1,35 @@
-# React + Vite
+# Divina Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite frontend for the Divina web programming project.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Create a `.env` file from `.env.example`:
 
-## React Compiler
+```env
+VITE_API_URL=http://localhost:8000/api
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Then run:
 
-## Expanding the ESLint configuration
+```bash
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Vercel deployment
+
+Deploy this folder as the frontend project:
+
+- Root Directory: `divina-client`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+
+Set this Vercel environment variable:
+
+```env
+VITE_API_URL=https://<your-real-server-project>.vercel.app/api
+```
+
+Replace the placeholder with the actual deployed `divina-server` URL. Do not use
+`your-divina-server.vercel.app`; that is only placeholder text.
